@@ -1,11 +1,10 @@
 import pandas as pd
-import numpy as np
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import MultinomialNB
-import matplotlib.pyplot as plt
-import seaborn as sns
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import f1_score
 import pickle
 
 # Data Processing
@@ -22,16 +21,35 @@ df.to_csv("YoutubeSpamCombinedDataset.csv")
 df_x = df['CONTENT']
 df_y = df['CLASS']
 
-# comment text vectorization
+# 2 different comment text vectorizations
 corpus = df_x
 cv = CountVectorizer()
 X = cv.fit_transform(corpus)
 
-# Model Fitting (Naive Bayes)
+tv = TfidfVectorizer()
+X2 = tv.fit_transform(corpus)
+
+# Model Fitting (Naive Bayes w/ CountVectorizer)
 X_train, X_test, y_train, y_test = train_test_split(X, df_y, test_size=0.3, random_state=7)
 clf = MultinomialNB()
-clf.fit(X_train,y_train)
-print("Accuracy of Model", clf.score(X_test, y_test)*100, "%")
+clf.fit(X_train, y_train)
+y_pred = clf.predict(X_test)
+conf_mat = confusion_matrix(y_test, y_pred)
+f1 = f1_score(y_test, y_pred)
+print("Accuracy of Naive Bayes Model using CountVec = ", clf.score(X_test, y_test))
+print(conf_mat)
+print(f1)
+
+# Model Fitting (Naive Bayes w/ TfidfVectorizer)
+X_train, X_test, y_train, y_test = train_test_split(X2, df_y, test_size=0.3, random_state=7)
+clf2 = MultinomialNB()
+clf2.fit(X_train, y_train)
+y_pred = clf2.predict(X_test)
+conf_mat = confusion_matrix(y_test, y_pred)
+f1 = f1_score(y_test, y_pred)
+print("Accuracy of Naive Bayes Model using TfidfVec = ", clf2.score(X_test, y_test)*100, "%")
+print(conf_mat)
+print(f1)
 
 def isSpam(x):
     if x == 1:
@@ -48,7 +66,7 @@ vect2 = cv.transform(comment2).toarray()
 print(comment2, " is ", isSpam(clf.predict(vect2)), ".")
 
 
-
+# saving model
 naivebayesML = open("YtbSpam_model.pkl","wb")
 pickle.dump((clf, cv), naivebayesML)
 naivebayesML.close()
