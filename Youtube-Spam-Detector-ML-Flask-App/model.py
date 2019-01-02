@@ -1,10 +1,16 @@
 import pandas as pd
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.feature_extraction.text import TfidfVectorizer
+import numpy as np
+from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer, TfidfTransformer
 from sklearn.model_selection import train_test_split
+from sklearn.model_selection import GridSearchCV
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import f1_score
+from sklearn.pipeline import Pipeline
+from pprint import pprint
+
+import matplotlib.pyplot as plt
+import seaborn as sns
 import pickle
 
 # Data Processing
@@ -29,6 +35,28 @@ X = cv.fit_transform(corpus)
 tv = TfidfVectorizer()
 X2 = tv.fit_transform(corpus)
 
+pipeline = Pipeline([('vec', CountVectorizer()), ('tfidf', TfidfTransformer()), ('clf', MultinomialNB())])
+parameters1 = {
+    'vec__max_df': (0.5, 0.75, 1.0),
+    'vec__max_features': (None, 5000, 10000),
+    'vec__min_df': (1, 10, 50),
+    'vec__binary': (True, False),
+    'clf__alpha': (1, 0.1, 0.01),
+    'tfidf__use_idf': (True, False),
+    'tfidf__sublinear_tf': (True, False),
+    'tfidf__norm': ('l1', 'l2'),
+    }
+
+grid_search = GridSearchCV(pipeline_count, parameters1, scoring="accuracy", cv = 3)
+grid_search.fit(df_x, df_y)
+print('Best score:', grid_search.best_score_)
+print('Best parameters:', grid_search.best_params_)
+
+grid_search = GridSearchCV(pipeline_tfidf, parameters1, scoring="accuracy", cv = 3)
+grid_search.fit(df_x, df_y)
+print('Best score:', grid_search.best_score_)
+print('Best parameters:', grid_search.best_params_)
+
 # Model Fitting (Naive Bayes w/ CountVectorizer)
 X_train, X_test, y_train, y_test = train_test_split(X, df_y, test_size=0.3, random_state=7)
 clf = MultinomialNB()
@@ -40,7 +68,9 @@ print("Accuracy of Naive Bayes Model using CountVec = ", clf.score(X_test, y_tes
 print(conf_mat)
 print(f1)
 
-# Model Fitting (Naive Bayes w/ TfidfVectorizer)
+# Model Fitting (Multinomial Naive Bayes w/ TfidfVectorizer)
+# Multinomial Naive Bayes simply assumes multinomial distribution for data, which seem to be a
+# reasonable assumption in the case of word counts in text.
 X_train, X_test, y_train, y_test = train_test_split(X2, df_y, test_size=0.3, random_state=7)
 clf2 = MultinomialNB()
 clf2.fit(X_train, y_train)
