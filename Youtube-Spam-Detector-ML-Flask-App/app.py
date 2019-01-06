@@ -10,14 +10,14 @@ def home():
 
 @app.route('/predict',methods=['POST'])
 def predict():
-    ytb_model = open("YtbSpam_model.pkl", "rb")
+    ytb_model = open("YTSpam_model.pkl", "rb")
     (clf, cv) = joblib.load(ytb_model)
     if request.method == 'POST':
         comment = request.form['comment']
         data = [comment]
         vect = cv.transform(data).toarray()
         my_prediction = clf.predict(vect)
-    return render_template('result.html', prediction= my_prediction)
+    return render_template('prediction.html', prediction= my_prediction)
 
 @app.route('/back',methods=['POST'])
 def back():

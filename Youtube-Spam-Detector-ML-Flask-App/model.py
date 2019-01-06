@@ -93,12 +93,12 @@ print(comment2, " is ", isSpam(clf.predict(vect2)), ".")
 
 
 # saving model
-naivebayesML = open("YtbSpam_model.pkl","wb")
+naivebayesML = open("YTSpam_model.pkl","wb")
 pickle.dump((clf, cv), naivebayesML)
 naivebayesML.close()
 
 # example prediction 3 using packaged model
-ytb_model = open("YtbSpam_model.pkl","rb")
+ytb_model = open("YTSpam_model.pkl","rb")
 new_model = pickle.load(ytb_model)
 comment3 = ["Definitely my favorite music video by this artist."]
 vect3 = cv.transform(comment3).toarray()
