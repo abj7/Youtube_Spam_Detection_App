@@ -35,28 +35,6 @@ X = cv.fit_transform(corpus)
 tv = TfidfVectorizer()
 X2 = tv.fit_transform(corpus)
 
-pipeline = Pipeline([('vec', CountVectorizer()), ('tfidf', TfidfTransformer()), ('clf', MultinomialNB())])
-parameters1 = {
-    'vec__max_df': (0.5, 0.75, 1.0),
-    'vec__max_features': (None, 5000, 10000),
-    'vec__min_df': (1, 10, 50),
-    'vec__binary': (True, False),
-    'clf__alpha': (1, 0.1, 0.01),
-    'tfidf__use_idf': (True, False),
-    'tfidf__sublinear_tf': (True, False),
-    'tfidf__norm': ('l1', 'l2'),
-    }
-
-grid_search = GridSearchCV(pipeline_count, parameters1, scoring="accuracy", cv = 3)
-grid_search.fit(df_x, df_y)
-print('Best score:', grid_search.best_score_)
-print('Best parameters:', grid_search.best_params_)
-
-grid_search = GridSearchCV(pipeline_tfidf, parameters1, scoring="accuracy", cv = 3)
-grid_search.fit(df_x, df_y)
-print('Best score:', grid_search.best_score_)
-print('Best parameters:', grid_search.best_params_)
-
 # Model Fitting (Naive Bayes w/ CountVectorizer)
 X_train, X_test, y_train, y_test = train_test_split(X, df_y, test_size=0.3, random_state=7)
 clf = MultinomialNB()
@@ -80,6 +58,24 @@ f1 = f1_score(y_test, y_pred)
 print("Accuracy of Naive Bayes Model using TfidfVec = ", clf2.score(X_test, y_test)*100, "%")
 print(conf_mat)
 print(f1)
+
+# Model Tuning with GridSearch and Pipeline
+#pipeline = Pipeline([('vec', CountVectorizer()), ('tfidf', TfidfTransformer()), ('clf', MultinomialNB())])
+#parameters = {
+#    'vec__max_df': (0.5, 0.625, 0.75, 0.875, 1.0),
+#    'vec__max_features': (None, 5000, 10000, 20000),
+#    'vec__min_df': (1, 5, 10, 20, 50),
+#    'tfidf__use_idf': (True, False),
+#    'tfidf__sublinear_tf': (True, False),
+#    'vec__binary': (True, False),
+#    'tfidf__norm': ('l1', 'l2'),
+#    'clf__alpha': (1, 0.1, 0.01, 0.001, 0.0001, 0.00001),
+#    }
+
+#grid_search = GridSearchCV(pipeline, parameters, scoring="accuracy", cv = 3)
+#grid_search.fit(df_x, df_y)
+#print('Best score:', grid_search.best_score_)
+#print('Best parameters:', grid_search.best_params_)
 
 def isSpam(x):
     if x == 1:

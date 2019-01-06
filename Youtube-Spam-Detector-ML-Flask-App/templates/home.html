@@ -16,7 +16,7 @@ body, html {height: 100%}
 </style>
 <head>
 	<title>Home</title>
-	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
 
@@ -30,11 +30,11 @@ body, html {height: 100%}
       <div class="w3-large w3-center">
 
 		<form action="{{ url_for('predict')}}" method="POST">
-		<p>Enter Your Comment Here</p>
+		<h2>Enter Your Comment Here</h2>
 		<textarea name="comment" rows="4" cols="50"></textarea>
 		<br/>
 
-		<input type="submit" class="button" value="predict">
+		<input type="submit" class="button1" value="predict">
 
 		</form>
 

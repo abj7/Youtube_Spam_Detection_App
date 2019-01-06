@@ -19,6 +19,10 @@ def predict():
         my_prediction = clf.predict(vect)
     return render_template('result.html', prediction= my_prediction)
 
+@app.route('/back',methods=['POST'])
+def back():
+    return render_template('home.html')
+
 
 if __name__ == '__main__':
     app.run(debug=True)
