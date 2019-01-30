@@ -16,7 +16,7 @@ body, html {height: 100%}
 </style>
 <head>
 	<title>Home</title>
-	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
 
@@ -28,34 +28,18 @@ body, html {height: 100%}
     <h1 class="w3-jumbo w3-animate-top w3-display-center">Youtube Comment Spam Detection</h1>
     <hr class="w3-border-grey" style="margin:auto;width:40%">
       <div class="w3-large w3-center">
-
-		<form action="{{ url_for('predict')}}" method="POST">
-		<h2>Enter Your Comment Here</h2>
-		<textarea name="comment" rows="4" cols="50"></textarea>
-		<br/>
-
-		<input type="submit" class="button1" value="predict">
-
-		</form>
-
-      </div>
-      <hr class="w3-border-grey" style="margin:auto;width:40%">
-      <div class="w3-medium w3-center">
-
-		<form action="{{ url_for('submit')}}" method="POST">
-		<h2>YouTube video URL: </h2>
-		<textarea name="comment" rows="2" cols="75"></textarea>
-		<br/>
-
-		<input type="submit" class="button1" value="predict">
+		<h2>Spam Results for Youtube Video</h2>
+		<div class="results">
+        {{ comment }}
+		</div>
+          <br/>
+          <form action="{{ url_for('back')}}" method="POST">
+		<input type="submit" class="button2" value="back">
 
 		</form>
-
       </div>
   </div>
 </div>
 
 </body>
 </html>
-
-
