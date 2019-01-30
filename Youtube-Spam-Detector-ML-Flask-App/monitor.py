@@ -15,8 +15,6 @@ args = argparser.parse_args()
 
 if not args.videoid:
     exit("Please specify videoid using the --videoid= parameter.")
-if not args.text:
-    exit("Please specify text using the --text= parameter.")
 
 youtube = yt.get_authenticated_service(args)
 data = yt.get_comments(youtube, id)

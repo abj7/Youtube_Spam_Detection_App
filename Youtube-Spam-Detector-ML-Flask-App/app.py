@@ -1,5 +1,6 @@
 from flask import Flask,render_template, request
 from sklearn.externals import joblib
+from oauth2client.tools import argparser
 import argparse
 import youtube as yt
 
@@ -34,24 +35,15 @@ def submit():
     (clf, cv) = joblib.load(ytb_model)
     if request.method == 'POST':
         id = yt.parse_video_id(request.form['comment'])
-
-        parser = argparse.ArgumentParser()
-        parser.add_argument("--videoid", dest='videoid', default="L-oNKK1CrnU", help="ID of video to like.")
-        args = parser.parse_args()
-
-        youtube = yt.get_authenticated_service(args)
-
-        data = yt.get_comments(youtube, id)
-        vect = cv.transform(data).toarray()
-        my_prediction = clf.predict(vect)
+        (authors, comments) = yt.get_comment_threads(id)
         spam_comments = []
-        print (id)
-        print (data)
-        print (my_prediction)
-        for elem in range(0, len(data)):
-            if my_prediction[elem] == 1:
-                spam_comments.append(data[elem])
-    return render_template('comments.html', comment = spam_comments)
+        for elem in range(0, len(comments)):
+            vect = cv.transform([comments[elem]]).toarray()
+            my_prediction = clf.predict(vect)
+            if my_prediction == 1:
+                spam_comments.append((authors[elem], comments[elem]))
+        print(spam_comments)
+    return render_template('comments.html',comments = spam_comments)
 
 if __name__ == '__main__':
     app.run(debug=True)

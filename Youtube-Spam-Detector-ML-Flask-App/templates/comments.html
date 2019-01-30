@@ -4,33 +4,48 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+
 <style>
+body, html {
+  height: 100%;
+}
 body,h1 {font-family: "Raleway", sans-serif}
-body, html {height: 100%}
-.bgimg {
+.parallax {
+  /* The image used */
   background-image: url('https://fosscrunch.com/assets/img/main/2018-04-25-youtube.jpg');
-  min-height: 100%;
-  background-position: center;
+
+  height: 100%;
+
+  /* Create the parallax scrolling effect */
+  background-attachment: fixed;
+  background-position: top center;
+  background-repeat: no-repeat;
   background-size: cover;
+  position: relative;
+  width: 100%;
 }
 </style>
+
 <head>
 	<title>Home</title>
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
 
-<div class="bgimg w3-display-container w3-animate-opacity w3-text-white">
+<div class="parallax w3-display-container w3-animate-opacity w3-text-white">
   <div class="w3-display-topleft w3-padding-large w3-medium">
     MLApp by Alan Ji
   </div>
   <div class="w3-display-middle">
-    <h1 class="w3-jumbo w3-animate-top w3-display-center">Youtube Comment Spam Detection</h1>
-    <hr class="w3-border-grey" style="margin:auto;width:40%">
       <div class="w3-large w3-center">
 		<h2>Spam Results for Youtube Video</h2>
+           <hr class="w3-border-grey" style="margin:auto;width:40%">
 		<div class="results">
-        {{ comment }}
+            <ul>
+                {% for tup in comments %}
+                <li>{{ tup }}</li>
+                {% endfor %}
+            </ul>
 		</div>
           <br/>
           <form action="{{ url_for('back')}}" method="POST">
